@@ -8,6 +8,8 @@ import {
 } from "../../utils/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
+import { useContext } from "react";
+import { UserContext } from "../../contexts/user.context";
 
 const defaultFormFields = {
     displayName: "",
@@ -19,6 +21,8 @@ const defaultFormFields = {
 const SignUpForm = () => {
     const [formFields, setFormFields] = useState(defaultFormFields);
     const { displayName, email, password, confirmPassword } = formFields;
+
+    const { setCurrentUser } = useContext(UserContext);
 
     const resetFormFields = () => {
         setFormFields(defaultFormFields);
@@ -34,6 +38,7 @@ const SignUpForm = () => {
         try {
             const { user } = await createAuthUserWithEmailAndPassword(email, password);
             await createUserDocFromAuth(user, { displayName });
+            setCurrentUser(user);
             resetFormFields();
         } catch (error) {
             if(error.code === "auth/email-already-in-use") {
@@ -54,10 +59,10 @@ const SignUpForm = () => {
             <h2>Don't have an account?</h2>
             <span>Sign up with an email and password</span>
             <form onSubmit={handleSubmit}>
-                <FormInput label="Display Name" onChange={handleChange} name="displayName" value={displayName} />
-                <FormInput label="Email" onChange={handleChange} name="email" value={email} />
-                <FormInput label="Password" onChange={handleChange} name="password" value={password} />
-                <FormInput label="Confirm Password" onChange={handleChange} name="confirmPassword" value={confirmPassword} />
+                <FormInput required label="Display Name" onChange={handleChange} name="displayName" value={displayName} />
+                <FormInput required type="email" label="Email" onChange={handleChange} name="email" value={email} />
+                <FormInput required type="password" label="Password" onChange={handleChange} name="password" value={password} />
+                <FormInput required type="password" label="Confirm Password" onChange={handleChange} name="confirmPassword" value={confirmPassword} />
                 <Button type="submit">Sign Up</Button>
             </form>
         </div>
