@@ -19,6 +19,17 @@ const addCartItem = (cartItems, productToAdd) => {
     }
 }
 
+const removeCartItem = (cartItems, cartItemToRemove) => {
+    const updatedCart = cartItems.map((cartItem) => {
+        if (cartItem.id === cartItemToRemove.id) {
+            return {...cartItem, quantity: cartItem.quantity - 1}
+        } else {
+            return cartItem;
+        }
+    });
+    return updatedCart.filter(cartItem => cartItem.quantity > 0);
+}
+
 export const CartContext = createContext({
     isCartOpen: false,
     setIsCartOpen: () => { },
@@ -38,12 +49,16 @@ export const CartProvider = ({ children }) => {
         setCartItems(addCartItem(cartItems, productToAdd));
     }
 
+    const removeItemFromCart = (cartItemToRemove) => {
+        setCartItems(removeCartItem(cartItems, cartItemToRemove));
+    }
+
     useEffect(() => {
         const itemsInCart = cartItems.reduce((accumulator, item) => accumulator + item.quantity, 0);
         setCartQuantity(itemsInCart);
     }, [cartItems]);
 
-    const value = { isCartOpen, setIsCartOpen, addItemToCart, cartItems, cartQuantity };
+    const value = { isCartOpen, setIsCartOpen, addItemToCart, cartItems, cartQuantity, removeItemFromCart };
 
     // you pass the state value and the setter so any child component can use it
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>
