@@ -1,17 +1,15 @@
-import "./directory-item.styles.scss"
+import {DirectoryItemContainer, BackgroundImage, Body} from "./directory-item.styles.jsx"
 
-const DirectoryItem = ({category}) => {
-    return (
-        <div key={category.id} className="directory-item-container">
-        <div className="background-image" style={{
-          backgroundImage: `url(${category.imageUrl})`
-        }} />
-        <div className="body">
-          <h2>{category.title}</h2>
-          <p>shop now</p>
-        </div>
-      </div>
-    )
+const DirectoryItem = ({ category }) => {
+  return (
+    <DirectoryItemContainer key={category.id}>
+      <BackgroundImage imageUrl={category.imageUrl} />
+      <Body>
+        <h2>{category.title}</h2>
+        <p>shop now</p>
+      </Body>
+    </DirectoryItemContainer>
+  )
 }
 
 export default DirectoryItem
