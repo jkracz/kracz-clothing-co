@@ -7,6 +7,7 @@ export const UserContext = createContext({
     setCurrentUser: () => null,
 });
 
+// make it easy to access action types
 export const USER_ACTION_TYPES = {
     "SET_CURRENT_USER": "SET_CURRENT_USER"
 }
