@@ -59,13 +59,19 @@ export const getCategoriesAndDocuments = async () => {
     const collectionRef = collection(db, "categories");
     const q = query(collectionRef);
     const querySnapshot = await getDocs(q);
-    const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-        const { title, items } = docSnapshot.data();
-        acc[title.toLowerCase()] = items;
-        return acc;
-    }, {});
+    return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
 
-    return categoryMap;
+    // as part of migrating to redux, you want to store the simplest form of data you get from BE in the store
+    // the selector will perform the necessary transformations to format the data how you want it
+    // so the following code is basically going to be handled by the selector now
+
+    // const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    //     const { title, items } = docSnapshot.data();
+    //     acc[title.toLowerCase()] = items;
+    //     return acc;
+    // }, {});
+
+    // return categoryMap;
 }
 
 export const createUserDocFromAuth = async (user, additionalInformation) => {
