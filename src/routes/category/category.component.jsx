@@ -1,14 +1,16 @@
 import { useState, useEffect, Fragment } from "react";
 import { useParams } from "react-router-dom";
 import ProductCard from "../../components/product-card/product-card.component";
+import Spinner from "../../components/spinner/spinner.component";
 
-import {CategoryContainer, CategoryTitle} from "./category.styles.jsx";
+import { CategoryContainer, CategoryTitle } from "./category.styles.jsx";
 import { useSelector } from "react-redux";
-import { selectCategoriesMap } from "../../store/categories/category.selector";
+import { selectCategoriesIsLoading, selectCategoriesMap } from "../../store/categories/category.selector";
 
 const Category = () => {
     const { category } = useParams();
     const categoriesMap = useSelector(selectCategoriesMap)
+    const isLoading = useSelector(selectCategoriesIsLoading);
 
     // you want to use state and effect bc you only want to update products if the category or the map changes
     // you don't want to update the page every time it loads 
@@ -22,12 +24,18 @@ const Category = () => {
     return (
         <Fragment>
             <CategoryTitle>{category.toUpperCase()}</CategoryTitle>
-            <CategoryContainer>
-                {
-                    products &&
-                    products.map((product) => <ProductCard key={product.id} product={product} />)
-                }
-            </CategoryContainer>
+            {
+                isLoading ? (
+                    <Spinner />
+                ) : (
+                    <CategoryContainer>
+                        {
+                            products &&
+                            products.map((product) => <ProductCard key={product.id} product={product} />)
+                        }
+                    </CategoryContainer>
+                )
+            }
         </Fragment>
     )
 }
